@@ -1,0 +1,23 @@
+name: keepalive
+# O GitHub desativa crons de repositorio publico apos 60 dias sem atividade.
+# Este job mensal cria um commit vazio pra manter o despertador ligado.
+on:
+  schedule:
+    - cron: "0 12 1 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - name: commit vazio mensal
+        run: |
+          git config user.name "muf-pinger"
+          git config user.email "pinger@users.noreply.github.com"
+          git commit --allow-empty -m "keepalive"
+          git push
